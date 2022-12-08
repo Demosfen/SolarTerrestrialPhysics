@@ -45,4 +45,6 @@ if not os.path.exists(currentFolder+'output/'):
 
 # --- Reading data ---
 
-substormsDateTime = io(substormListsPath[x] for x in range(len(substormListsPath)))
+for i in range (len(substormListsPath)):
+    
+    substormsDateTimeStringData = io(substormListsPath[i])
