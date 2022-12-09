@@ -136,7 +136,7 @@ for substormListPath in substormListsPath:
                 
             except ValueError:
                 print("There is no Kp-index for: " + substormOnset)
-                output.append(substormOnset + ' NaN')
+                output.append("  ".join([substormOnset.rstrip('\n')[:-secondsCut], "NaN"]))
     
     # --- Printing output for corresponding substorm list ---
                 
