@@ -32,9 +32,7 @@ listed in ASCII file(s) with Kp-index.
    - Hours, Minutes and Seconds should be separated with ":" symbol;
    - In Time column can be only Hours or Hours and Minutes;
    - Date and Time columns should be separated with whitespace.
-   - Examples of Date ad Time columns:
-       2013-02-13 14
-       2013-02-13 14:32
+   - Example of Date and Time columns:
        2013-02-13 14:32:34
    - This script ignores all other columns and add corresponding Kp
        as the last column.
