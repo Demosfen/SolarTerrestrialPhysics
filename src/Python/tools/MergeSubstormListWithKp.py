@@ -32,7 +32,9 @@ listed in ASCII file(s) with Kp-index.
    - Hours, Minutes and Seconds should be separated with ":" symbol;
    - In Time column can be only Hours or Hours and Minutes;
    - Date and Time columns should be separated with whitespace.
-   - Example of Date and Time columns:
+   - Examples of Date ad Time columns:
+       2013-02-13 14
+       2013-02-13 14:32
        2013-02-13 14:32:34
    - This script ignores all other columns and add corresponding Kp
        as the last column.
@@ -72,9 +74,15 @@ output = []
     
 currentFolder = str(pathlib.Path(__file__).parent.resolve())[:-srcFolderNameLenght]
 
-substormListNames = ['SolarMinimum20132015.dat', 
-                     'SolarUprising20162017.dat', 
-                     'SolarMaximum20192020.dat']
+substormListNames = ['SolarMinimumOffSeason.csv', 
+                     'SolarMinimumSummer.csv',
+                     'SolarMinimumWinter.csv',
+                     'SolarMaximumOffSeason.csv', 
+                     'SolarMaximumSummer.csv',
+                     'SolarMaximumWinter.csv',
+                     'SolarUprisingOffSeason.csv', 
+                     'SolarUprisingSummer.csv',
+                     'SolarUprisingWinter.csv']
 
 kpIndexFilename = 'Kp_2013_2019.dat'
 
@@ -116,14 +124,19 @@ for substormListPath in substormListsPath:
             substormOnset.index(dataFileCommentedRow)
             
         except ValueError:
-            [substormDate, substormTime] = substormOnset.split()
+            dataRow = substormOnset.split()
+            [substormDate, substormTime] = dataRow[0:1]
             substormHour = substormTime.split(':')[0]
             
             try:
                 substormUnixTime = datetime.strptime(substormDate + ' ' + substormHour, '%Y-%m-%d %H').timestamp()
+                substormOnset = datetime.strptime(substormDate + ' ' + substormTime[:-3], '%Y-%m-%d %H:%M')
+                substormOnset = datetime.strftime(substormOnset,'%Y-%m-%d %H:%M')
                 
             except ValueError:
                 substormUnixTime = datetime.strptime(substormDate + ' ' + substormHour, '%m/%d/%Y %H').timestamp()
+                substormOnset = datetime.strptime(substormDate + ' ' + substormTime[:-3], '%m/%d/%Y %H:%M')
+                substormOnset = datetime.strftime(substormOnset,'%Y-%m-%d %H:%M')
                 
             # --- Merging substorm with concurrent Kp-index value ---
             # --- and writing down the output to the list ---
@@ -132,7 +145,7 @@ for substormListPath in substormListsPath:
                 i = kpIndexUnixTime.index(substormUnixTime)
                 kpIndexValue = kpIndexValues[i]
                 
-                output.append("  ".join([substormOnset.rstrip('\n')[:-secondsCut], kpIndexValue]))
+                output.append("  ".join([substormOnset.rstrip('\n'), kpIndexValue]))
                 
             except ValueError:
                 print("There is no Kp-index for: " + substormOnset)
@@ -147,3 +160,5 @@ for substormListPath in substormListsPath:
         file.write(line)
         file.write('\n')
     file.close()
+    
+    del output[:]
