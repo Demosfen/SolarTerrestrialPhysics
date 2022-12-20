@@ -15,6 +15,7 @@ listed in ASCII file(s) with Kp-index.
 3. Put Kp-index data file to ../data directory;
 
 4. Put your substorm onsets list to ../lists directory;
+    (download list here: https://supermag.jhuapl.edu/substorms/?tab=download)
 
 5. Change "substormListNames" list variable in line 77
         according to the name(s) of your substorm(s) list(s);
@@ -28,18 +29,15 @@ listed in ASCII file(s) with Kp-index.
 1. No need to change Kp-index data file from omniweb;
 
 2. Your substorm onset list(s) should start with Date and Time columns:
-   - Year, Month and Day should be separated with "-" symbol;
-   - Hours, Minutes and Seconds should be separated with ":" symbol;
-   - In Time column can be only Hours or Hours and Minutes;
+   - Year, Month and Day should be separated with whitespace;
+   - Hours, Minutes and Seconds should be separated with whitespace;
    - Date and Time columns should be separated with whitespace.
-   - Examples of Date ad Time columns:
-       2013-02-13 14
-       2013-02-13 14:32
-       2013-02-13 14:32:34
+   - Example of Date ad Time columns:
+       2013 02 13 14 32
    - This script ignores all other columns and add corresponding Kp
        as the last column.
-   - If you want to comment ssome lines in your onsets list,
-       use "#" sign at the end of line.
+   - If you want to comment some lines in your onsets list,
+       use "#" sign at the beginning of line.
 
 -------------------
 
@@ -61,6 +59,23 @@ def io(path):
     file.close()
     return data
 
+# --- Matching def ---
+def season(month):
+    if month in range(3,5) or month in range(9,11):
+        
+            
+    
+
+# --- Print list ---
+def PrintList(path, name, outputHeader,output):
+    file = open(path+name+'.lst','w')
+    file.write(outputHeader)
+    file.write('\n')
+    for line in output:
+        file.write(line)
+        file.write('\n')
+        file.close()
+
 # === Default variables ===
 
 srcFolderNameLenght = 3
@@ -74,21 +89,35 @@ output = []
     
 currentFolder = str(pathlib.Path(__file__).parent.resolve())[:-srcFolderNameLenght]
 
-substormListNames = ['SolarMinimumOffSeason.csv', 
-                     'SolarMinimumSummer.csv',
-                     'SolarMinimumWinter.csv',
-                     'SolarMaximumOffSeason.csv', 
-                     'SolarMaximumSummer.csv',
-                     'SolarMaximumWinter.csv',
-                     'SolarUprisingOffSeason.csv', 
-                     'SolarUprisingSummer.csv',
-                     'SolarUprisingWinter.csv']
+substormListNames = ['substorms-ohtani-20120101_000000_to_20211231_235900.ascii']
 
-kpIndexFilename = 'Kp_2013_2019.dat'
+kpIndexFilename = 'Kp_2012_2021.dat'
 
 substormListsPath = [currentFolder + 'lists/' + name for name in substormListNames]
 
 kpIndexPath = currentFolder + 'data/' + kpIndexFilename
+
+# === List generator settings ===
+
+minimumStart = datetime(2018, 6, 1).timestamp()
+minimumEnd = datetime(2020, 1, 1).timestamp()
+maximumStart = datetime(2013, 6, 1).timestamp()
+maximumEnd = datetime(2014, 8, 1).timestamp()
+midStart = datetime(2015, 3, 1).timestamp()
+midEnd = datetime(2016, 8, 1).timestamp()
+
+# --- suffix section ---
+
+solarMinEq = []
+solarMinWin = []
+solarMinSum = []
+solarMaxEq = []
+solarMaxWin = []
+solarMaxSum = []
+solarMidEq = []
+solarMidWin = []
+solarMidSum = []
+
 
 # ====================== Main ==============================
 
@@ -125,18 +154,14 @@ for substormListPath in substormListsPath:
             
         except ValueError:
             dataRow = substormOnset.split()
-            [substormDate, substormTime] = dataRow[0:1]
-            substormHour = substormTime.split(':')[0]
+            substormDate = dataRow[0]+'-'+dataRow[1]+'-'+dataRow[2]
+            substormTime = dataRow[3]+':'+dataRow[4]
+            substormHour = dataRow[3]
+            substormOnset = substormDate + ' ' + substormTime
+            substormUnixTime = datetime.strptime(substormDate + ' ' + substormHour, '%Y-%m-%d %H').timestamp()
             
-            try:
-                substormUnixTime = datetime.strptime(substormDate + ' ' + substormHour, '%Y-%m-%d %H').timestamp()
-                substormOnset = datetime.strptime(substormDate + ' ' + substormTime[:-3], '%Y-%m-%d %H:%M')
-                substormOnset = datetime.strftime(substormOnset,'%Y-%m-%d %H:%M')
+            if (substormUnixTime in range(maximumStart, maximumEnd)):
                 
-            except ValueError:
-                substormUnixTime = datetime.strptime(substormDate + ' ' + substormHour, '%m/%d/%Y %H').timestamp()
-                substormOnset = datetime.strptime(substormDate + ' ' + substormTime[:-3], '%m/%d/%Y %H:%M')
-                substormOnset = datetime.strftime(substormOnset,'%Y-%m-%d %H:%M')
                 
             # --- Merging substorm with concurrent Kp-index value ---
             # --- and writing down the output to the list ---
@@ -150,15 +175,5 @@ for substormListPath in substormListsPath:
             except ValueError:
                 print("There is no Kp-index for: " + substormOnset)
                 output.append("  ".join([substormOnset.rstrip('\n')[:-secondsCut], "NaN"]))
-    
-    # --- Printing output for corresponding substorm list ---
-                
-    file = open(currentFolder+'/output/'+substormListPath.lstrip(currentFolder+'lists/')[:-extensionLenght]+'_plusKp.dat','w')
-    file.write(outputHeader)
-    file.write('\n')
-    for line in output:
-        file.write(line)
-        file.write('\n')
-    file.close()
     
     del output[:]
