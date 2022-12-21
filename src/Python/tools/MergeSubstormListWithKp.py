@@ -59,12 +59,24 @@ def io(path):
     file.close()
     return data
 
+# --- Year period matching ---
+def EpochIndex(cycle,time):
+    for i in range(len(cycle)):
+        if int(time) in range(int(cycle[i][0]),int(cycle[i][1]),100):
+            return i+1
+        else:
+            return False
+
 # --- Matching def ---
-def season(month):
-    if month in range(3,5) or month in range(9,11):
-        
-            
-    
+def SeasonIndex(month):
+    if month in range(3,5):
+        return 2
+    elif month in range(6,8):
+        return 3
+    elif month in range(9,11):
+        return 4
+    else:
+        return 1
 
 # --- Print list ---
 def PrintList(path, name, outputHeader,output):
@@ -99,12 +111,9 @@ kpIndexPath = currentFolder + 'data/' + kpIndexFilename
 
 # === List generator settings ===
 
-minimumStart = datetime(2018, 6, 1).timestamp()
-minimumEnd = datetime(2020, 1, 1).timestamp()
-maximumStart = datetime(2013, 6, 1).timestamp()
-maximumEnd = datetime(2014, 8, 1).timestamp()
-midStart = datetime(2015, 3, 1).timestamp()
-midEnd = datetime(2016, 8, 1).timestamp()
+cycleMoments = [[datetime(2013, 6, 1).timestamp(),datetime(2014, 8, 1).timestamp()],
+                [datetime(2015, 3, 1).timestamp(),datetime(2016, 8, 1).timestamp()],
+                [datetime(2018, 6, 1).timestamp(),datetime(2020, 1, 1).timestamp()]]
 
 # --- suffix section ---
 
@@ -160,20 +169,27 @@ for substormListPath in substormListsPath:
             substormOnset = substormDate + ' ' + substormTime
             substormUnixTime = datetime.strptime(substormDate + ' ' + substormHour, '%Y-%m-%d %H').timestamp()
             
-            if (substormUnixTime in range(maximumStart, maximumEnd)):
+            i = EpochIndex(cycleMoments,substormUnixTime)
+            
+            if i:
+                j = SeasonIndex(dataRow[1])
+            
+            if 
+            
+            
                 
                 
             # --- Merging substorm with concurrent Kp-index value ---
             # --- and writing down the output to the list ---
             
-            try:
-                i = kpIndexUnixTime.index(substormUnixTime)
-                kpIndexValue = kpIndexValues[i]
+#            try:
+#                i = kpIndexUnixTime.index(substormUnixTime)
+#                kpIndexValue = kpIndexValues[i]
                 
-                output.append("  ".join([substormOnset.rstrip('\n'), kpIndexValue]))
+#                output.append("  ".join([substormOnset.rstrip('\n'), kpIndexValue]))
                 
-            except ValueError:
-                print("There is no Kp-index for: " + substormOnset)
-                output.append("  ".join([substormOnset.rstrip('\n')[:-secondsCut], "NaN"]))
+#            except ValueError:
+#                print("There is no Kp-index for: " + substormOnset)
+#                output.append("  ".join([substormOnset.rstrip('\n')[:-secondsCut], "NaN"]))
     
     del output[:]
