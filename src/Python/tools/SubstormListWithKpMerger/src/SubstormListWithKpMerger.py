@@ -78,9 +78,9 @@ output = [
     
 currentFolder = str(pathlib.Path(__file__).parent.resolve())[:-srcFolderNameLenght]
 
-substormListNames = ['substorms-ohtani-20120101_000000_to_20211231_235900.ascii']
+substormListNames = ['ExampleList.lst']
 
-kpIndexFilename = 'Kp_2012_2021.dat'
+kpIndexFilename = 'ExampleKp.dat'
 
 substormListsPath = [currentFolder + 'lists/' + name for name in substormListNames]
 
