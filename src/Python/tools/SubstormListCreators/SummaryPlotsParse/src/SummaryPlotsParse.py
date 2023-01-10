@@ -14,7 +14,7 @@ from datetime import datetime
 import pathlib
 
 currentFolder = str(pathlib.Path(__file__).parent.resolve())
-currentFolder = currentFolder[:len(currentFolder)-6].replace("\\", '/')
+currentFolder = currentFolder[:len(currentFolder)-3].replace("\\", '/')
 
 fileNames = os.listdir(currentFolder+'lists/GOESevents/')
 
