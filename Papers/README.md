@@ -21,6 +21,6 @@ variable fraction of the distant 3‐D substorm current, inferred from spacecraf
 lobe and at geosynchronous distance. The discrepancy can be partly attributed to
 additional region 2 polarity field‐aligned currents in the same longitudinal sector,
 associated with azimuthal diversion of the earthward plasma flow when it encounters the
-region of strong quasi‐dipolar field in the inner magnetosphere.]
+region of strong quasi‐dipolar field in the inner magnetosphere.](https://geo.phys.spbu.ru/~tsyganenko/temp2/Sergeev_et_al_JGRA_2011.pdf)
 
 
