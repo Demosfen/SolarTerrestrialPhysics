@@ -1,13 +1,13 @@
 """
 Simple helper routines.
 author: Alexander Nikolaev
-------------------------------
 """
-
 
 """
 Simple data file reader.
 """
+
+
 def io(path):
     """
     :rtype: Data rows in string format
@@ -24,6 +24,8 @@ but are stored as Kp = 0, 3, 7, 10, 13, 17, ... in the OMNI data set.
 OMNI have mapped 0+ to 3, 1- to 7, 1 to 10, 1+ to 13, 2- to 17, etc.
 For example Kp = 7+ is coded as 73; Kp = 7- is coded as 77; Kp = 7 as 70
 """
+
+
 def kp_classification(value):
     match value:
         case "0" | "3":
@@ -71,14 +73,25 @@ def season_index(month):
         return 0  # Winter
 
 
+# --- Season search ---
+
+def activity_index(kp):
+    if kp in range(0, 16):
+        return 0  # weak activity
+    elif kp in range(16, 24):
+        return 1  # moderate activity
+    else:
+        return 2  # strong activity
+
+
 # --- Print list ---
 
-def print_list(path, name, outputHeader, toPrint):
+def print_list(path, name, output_header, to_print):
     file = open(path + name + '.lst', 'w')
-    file.write(outputHeader)
+    file.write(output_header)
     file.write('\n')
 
-    for line in toPrint:
+    for line in to_print:
         file.write(line)
         file.write('\n')
     file.close()
