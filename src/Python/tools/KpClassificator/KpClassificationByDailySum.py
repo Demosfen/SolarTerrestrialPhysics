@@ -23,15 +23,21 @@ srcFolderNameLength = 35
 kpIndexFilename = 'Kp_2012_2021.dat'
 outputHeader = "YYYY-MM-DD\tKp"
 
+# ... File Names ...
+epoch_string = ["SolarMax", "SolarMid", "SolarMin"]
+season_string = ["Winter", "Summer", "OffSeason"]
+activity_string = ["NoActivity", "LowDisturbance", "Disturbed"]
+
 # --- Initialize arrays ---
 kpIndexUnixTime = []
 kpIndexValues = []
 
 # -- OUTPUT structure [i,j] vectors in vectors ---
+# --- [epoch[season[activity]]]
 output = [
-    [[], [], []],
-    [[], [], []],
-    [[], [], []]
+    [[[], [], []], [[], [], []], [[], [], []]],
+    [[[], [], []], [[], [], []], [[], [], []]],
+    [[[], [], []], [[], [], []], [[], [], []]]
 ]
 
 # --- SubRoutines ---
@@ -68,16 +74,13 @@ for i in range(0, len(kpIndexStringData), 24):
 
         if output_i >= 0:
             output_j = HelperRoutines.season_index(kpIndexDateTime.month)
-            output[output_i][output_j].append("\t".join([kpIndexDateTime.strftime("%Y-%m-%d"), str(kpSum)]))
+            output_k = HelperRoutines.activity_index(kpSum)
+            output[output_i][output_j][output_k].append("\t".join([kpIndexDateTime.strftime("%Y-%m-%d"), str(kpSum)]))
 
-    HelperRoutines.print_list(outputPath, 'SolarMaximumWinter_KpSum', outputHeader, output[0][0])
-    HelperRoutines.print_list(outputPath, 'SolarMaximumSummer_KpSum', outputHeader, output[0][1])
-    HelperRoutines.print_list(outputPath, 'SolarMaximumOffSeason_KpSum', outputHeader, output[0][2])
-    HelperRoutines.print_list(outputPath, 'SolarMidWinter_KpSum', outputHeader, output[1][0])
-    HelperRoutines.print_list(outputPath, 'SolarMidSummer_KpSum', outputHeader, output[1][1])
-    HelperRoutines.print_list(outputPath, 'SolarMidOffSeason_KpSum', outputHeader, output[1][2])
-    HelperRoutines.print_list(outputPath, 'SolarMinimumWinter_KpSum', outputHeader, output[2][0])
-    HelperRoutines.print_list(outputPath, 'SolarMinimumSummer_KpSum', outputHeader, output[2][1])
-    HelperRoutines.print_list(outputPath, 'SolarMinimumOffSeason_KpSum', outputHeader, output[2][2])
+for i in range(0, 2):
+    for j in range(0, 2):
+        for k in range(0, 3):
+            HelperRoutines.print_list(outputPath, "".join([epoch_string[i], season_string[j], activity_string[k]]),
+                                      outputHeader, output[i][j][k])
 
-    print("Success!")
+print("Success!")
