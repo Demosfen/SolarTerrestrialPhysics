@@ -15,3 +15,21 @@ Created on Mon Feb 20 10:32:14 2023
 
 @author: Alexander Nikolaev
 """
+
+# === Import libs ===
+
+import os
+from datetime import datetime
+import pathlib
+
+# === Def's section ===
+
+# --- Read ASCII file ---
+def io(path):
+    
+    file = open(path,'r')
+    data = file.readlines() # vector of the data (line-by-line, string type)
+    file.close()
+    return data
+
+# === Default variables ===
