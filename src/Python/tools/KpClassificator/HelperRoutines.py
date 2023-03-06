@@ -49,6 +49,29 @@ def kp_classification(value):
         case "87" | "90" | "93":
             return 9
 
+def kp_classification_Kyoto(value):
+    match value:
+        case "0" | "3":
+            return 0
+        case "7" | "10" | "13":
+            return 1
+        case "17" | "20" | "23":
+            return 2
+        case "27" | "30" | "33":
+            return 3
+        case "37" | "40" | "43":
+            return 4
+        case "47" | "50" | "53":
+            return 5
+        case "57" | "60" | "63":
+            return 6
+        case "67" | "70" | "73":
+            return 7
+        case "77" | "80" | "83":
+            return 8
+        case "87" | "90" | "93":
+            return 9
+
 
 # --- Epoch and Substorm onset compare ---
 
@@ -76,9 +99,9 @@ def season_index(month):
 # --- Season search ---
 
 def activity_index(kp):
-    if kp in range(0, 16):
+    if 0.00 <= kp <= 15.00: #kp in range(0.0, 16.0):
         return 0  # weak activity
-    elif kp in range(16, 24):
+    elif 15.00 < kp < 24.00:  #kp in range(16.0, 24.0):
         return 1  # moderate activity
     else:
         return 2  # strong activity
